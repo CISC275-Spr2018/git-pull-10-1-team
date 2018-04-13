@@ -1,13 +1,13 @@
 public enum Direction {
 
-	NORTH("north"),
-	NORTHEAST("northeast"),
-	EAST("east"),
 	SOUTHEAST("southeast"),
+	EAST("east"),
+	WEST("west"),
+	NORTH("north"),
 	SOUTH("south"),
 	SOUTHWEST("southwest"),
-	WEST("west"),
-	NORTHWEST("northwest");
+	NORTHWEST("northwest"),
+	NORTHEAST("northeast");
 	
 	private String name = null;
 	
@@ -17,6 +17,7 @@ public enum Direction {
 	public String getName() {
 		return name;
 	}
+	
 
 
 }

@@ -31,29 +31,14 @@ public class View extends JPanel {
 	private JButton stop_button;
 	private JButton direction_button;
 	
-	Action drawAction = new AbstractAction() {
-		public void actionPerformed(ActionEvent e) {
-			repaint();
-		}
-	};;
-	final int drawDelay = 30; // msec
-	
 	boolean stopFlag;
 	boolean directFlag = false;
 	private ActionListener actionListener;
 	private ActionListener actionListener2;
 
 	JFrame frame = new JFrame("MVC_Animation");
-	int picNum;
+	private int picNum;
 	BufferedImage[] pics;
-	BufferedImage[] pics1;
-	BufferedImage[] pics2;
-	BufferedImage[] pics3;
-	BufferedImage[] pics4;
-	BufferedImage[] pics5;
-	BufferedImage[] pics6;
-	BufferedImage[] pics7;
-	BufferedImage[] pics8;
 	BufferedImage[][] picslist = new BufferedImage[8][];
 
 	final int frameCount = 10;
@@ -144,6 +129,10 @@ public class View extends JPanel {
 	public void setDirect(String direct) {
 		this.direct = direct;
 	}
+	
+	public void setPicNum (int num) {
+		this.picNum = num;
+	}
 
 	public View() {
 
@@ -180,60 +169,21 @@ public class View extends JPanel {
 		direction_button.addActionListener(actionListener2 = new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (actionEvent.getSource() == direction_button) {
-						Direct_ButtonListener();
+						chang_direct_button();
 				}
 			}
 		});
 		frame.getContentPane().add(direction_button);
-
-		BufferedImage img1 = createImage(new File("Images/orc/orc_forward_" + Direction.SOUTHEAST + ".png"));
-		pics1 = new BufferedImage[10];
-		for (int i = 0; i < frameCount; i++)
-			pics1[i] = img1.getSubimage(ImageWidth * i, 0, ImageWidth, ImageHeight);
-
-		BufferedImage img2 = createImage(new File("Images/orc/orc_forward_" + Direction.EAST + ".png"));
-		pics2 = new BufferedImage[10];
-		for (int i = 0; i < frameCount; i++)
-			pics2[i] = img2.getSubimage(ImageWidth * i, 0, ImageWidth, ImageHeight);
-
-		BufferedImage img3 = createImage(new File("Images/orc/orc_forward_" + Direction.WEST + ".png"));
-		pics3 = new BufferedImage[10];
-		for (int i = 0; i < frameCount; i++)
-			pics3[i] = img3.getSubimage(ImageWidth * i, 0, ImageWidth, ImageHeight);
-
-		BufferedImage img4 = createImage(new File("Images/orc/orc_forward_" + Direction.NORTH + ".png"));
-		pics4 = new BufferedImage[10];
-		for (int i = 0; i < frameCount; i++)
-			pics4[i] = img4.getSubimage(ImageWidth * i, 0, ImageWidth, ImageHeight);
-
-		BufferedImage img5 = createImage(new File("Images/orc/orc_forward_" + Direction.SOUTH + ".png"));
-		pics5 = new BufferedImage[10];
-		for (int i = 0; i < frameCount; i++)
-			pics5[i] = img5.getSubimage(ImageWidth * i, 0, ImageWidth, ImageHeight);
-
-		BufferedImage img6 = createImage(new File("Images/orc/orc_forward_" + Direction.SOUTHWEST + ".png"));
-		pics6 = new BufferedImage[10];
-		for (int i = 0; i < frameCount; i++)
-			pics6[i] = img6.getSubimage(ImageWidth * i, 0, ImageWidth, ImageHeight);
-
-		BufferedImage img7 = createImage(new File("Images/orc/orc_forward_" + Direction.NORTHWEST + ".png"));
-		pics7 = new BufferedImage[10];
-		for (int i = 0; i < frameCount; i++)
-			pics7[i] = img7.getSubimage(ImageWidth * i, 0, ImageWidth, ImageHeight);
-
-		BufferedImage img8 = createImage(new File("Images/orc/orc_forward_" + Direction.NORTHEAST + ".png"));
-		pics8 = new BufferedImage[10];
-		for (int i = 0; i < frameCount; i++)
-			pics8[i] = img8.getSubimage(ImageWidth * i, 0, ImageWidth, ImageHeight);
-
-		picslist[0] = pics1;
-		picslist[1] = pics2;
-		picslist[2] = pics3;
-		picslist[3] = pics4;
-		picslist[4] = pics5;
-		picslist[5] = pics6;
-		picslist[6] = pics7;
-		picslist[7] = pics8;
+	
+		for (int i = 0; i < picslist.length; i++) {
+			 BufferedImage img=createImage(new File("Images/orc/orc_forward_" +
+			 Direction.values()[i] + ".png"));
+			 BufferedImage[] pics= new BufferedImage[frameCount];
+			 for (int j = 0; j < frameCount; j++) {
+			 pics[j] = img.getSubimage(ImageWidth * j, 0, ImageWidth, ImageHeight);
+			 }
+			 picslist[i]=pics;
+		}
 	}
 
 	public void update(int x, int y, String direct) {
@@ -268,9 +218,12 @@ public class View extends JPanel {
 	}
 
 	public void paint(Graphics g) {
+		try {
+			setPicNum((picNum + 1) % frameCount);
 
-		picNum = (picNum + 1) % frameCount;
-		g.drawImage(pics[picNum], getXloc(), getYloc(), Color.gray, this);
+			g.drawImage(pics[picNum], getXloc(), getYloc(), Color.gray, this);
+		} catch (RuntimeException e) {
+		}
 	}
 
 	private BufferedImage createImage(File filename) {
@@ -295,7 +248,7 @@ public class View extends JPanel {
 
 	}
 
-	public void Direct_ButtonListener() {
+	public void chang_direct_button() {
 		if (directFlag) {
 			directFlag = false;
 			if (getDirect() == Direction.NORTH.getName()) {
@@ -325,5 +278,6 @@ public class View extends JPanel {
 		this.xloc2 = x;
 		this.yloc2 = y;
 	}
+	
 
 }
