@@ -251,24 +251,24 @@ public class View extends JPanel {
 	public void chang_direct_button() {
 		if (directFlag) {
 			directFlag = false;
-			if (getDirect() == Direction.NORTH.getName()) {
-				setDirect(Direction.SOUTH.getName());
-			}
-			if (getDirect() == Direction.SOUTH.getName()) {
-				setDirect(Direction.NORTH.getName());
-			}
-			if (getDirect() == Direction.NORTHEAST.getName()) {
-				setDirect(Direction.NORTHWEST.getName());
-			}
-			if (getDirect() == Direction.NORTHWEST.getName()) {
-				setDirect(Direction.NORTHEAST.getName());
-			}
-			if (getDirect() == Direction.SOUTHWEST.getName()) {
-				setDirect(Direction.SOUTHEAST.getName());
-			}
-			if (getDirect() == Direction.SOUTHEAST.getName()) {
-				setDirect(Direction.SOUTHWEST.getName());
-			}
+//			if (getDirect() == Direction.NORTH.getName()) {
+//				setDirect(Direction.SOUTH.getName());
+//			}
+//			if (getDirect() == Direction.SOUTH.getName()) {
+//				setDirect(Direction.NORTH.getName());
+//			}
+//			if (getDirect() == Direction.NORTHEAST.getName()) {
+//				setDirect(Direction.NORTHWEST.getName());
+//			}
+//			if (getDirect() == Direction.NORTHWEST.getName()) {
+//				setDirect(Direction.NORTHEAST.getName());
+//			}
+//			if (getDirect() == Direction.SOUTHWEST.getName()) {
+//				setDirect(Direction.SOUTHEAST.getName());
+//			}
+//			if (getDirect() == Direction.SOUTHEAST.getName()) {
+//				setDirect(Direction.SOUTHWEST.getName());
+//			}
 		} else {
 			directFlag = true;
 		}
