@@ -28,69 +28,69 @@ import javax.swing.Timer;
  **/
 @SuppressWarnings("serial")
 public class View extends JPanel {
+
 	private JButton stop_button;
 	private JButton direction_button;
-	
+
 	boolean stopFlag;
 	boolean directFlag = false;
+
+	boolean key_up;
+	boolean key_down;
+	boolean key_left;
+	boolean key_right;
+
 	private ActionListener actionListener;
 	private ActionListener actionListener2;
 
 	JFrame frame = new JFrame("MVC_Animation");
 	private int picNum;
-	BufferedImage[] pics;
-	BufferedImage[][] picslist = new BufferedImage[8][];
+	BufferedImage[] current_pics;
+	BufferedImage[][] curr_piclist;
 
-	final int frameCount = 10;
+	BufferedImage[][] picslist_jump = new BufferedImage[8][];
+	BufferedImage[][] picslist_fire = new BufferedImage[8][];
+	BufferedImage[][] picslist_walk = new BufferedImage[8][];
+
+	final int frameCount_walk = 10;
+	final int frameCount_fire = 4;
+	final int frameCount_jump = 8;
 	final private int Width = 500;
 	final private int Height = 300;
 	final private int ImageWidth = 165;
 	final private int ImageHeight = 165;
-	
+
 	private int xloc;
 	private int yloc;
 	private int xloc2;
 	private int yloc2;
 
-	private String direct;
+	private Direction direct;
 	private final int Button_x = 130; // location x
 	private final int Button_y = 300; // location y
 	private final int Button_sizex = 100; // size height
 	private final int Button_sizey = 40; // size width
 
-	public JButton getButton_stop() {
+	Action_Enum act;
+	
+
+	public JButton getStop_button() {
 		return stop_button;
 	}
 
-	public JButton getButton_direct() {
-		return direction_button;
+	public Action_Enum getAct() {
+		return act;
 	}
 
-	public int getButton_x() {
-		return Button_x;
+	public void setAct(Action_Enum act) {
+		this.act = act;
 	}
 
-	public int getButton_y() {
-		return Button_y;
+	public void setCurr_piclist(BufferedImage[][] curr_piclist) {
+		this.curr_piclist = curr_piclist;
 	}
-
-	public int getButton_sizex() {
-		return Button_sizex;
-	}
-
-	public int getButton_sizey() {
-		return Button_sizey;
-	}
-
-	public boolean isFlag() {
-		return stopFlag;
-	}
-
-	public boolean isdirectFlag() {
-		return directFlag;
-	}
-
-	public String getDirect() {
+	
+	public Direction getDirect() {
 		return direct;
 	}
 
@@ -110,6 +110,10 @@ public class View extends JPanel {
 		return ImageHeight;
 	}
 
+	public boolean isFlag() {
+		return stopFlag;
+	}
+
 	public int getXloc() {
 		return xloc;
 	}
@@ -126,16 +130,49 @@ public class View extends JPanel {
 		this.yloc = yloc;
 	}
 
-	public void setDirect(String direct) {
+	public void setDirect(Direction direct) {
 		this.direct = direct;
 	}
-	
-	public void setPicNum (int num) {
+
+	public void setPicNum(int num) {
 		this.picNum = num;
 	}
 
-	public View() {
+	public boolean isKey_up() {
+		return key_up;
+	}
 
+	public boolean isKey_down() {
+		return key_down;
+	}
+
+	public boolean isKey_left() {
+		return key_left;
+	}
+
+	public boolean isKey_right() {
+		return key_right;
+	}
+
+	public void setKey_up(boolean key_up) {
+		this.key_up = key_up;
+	}
+
+	public void setKey_down(boolean key_down) {
+		this.key_down = key_down;
+	}
+
+	public void setKey_left(boolean key_left) {
+		this.key_left = key_left;
+	}
+
+	public void setKey_right(boolean key_right) {
+		this.key_right = key_right;
+	}
+
+	public View() {
+		act = Action_Enum.FORWARD;
+		curr_piclist=picslist_walk;
 		frame.getContentPane().setBackground(Color.gray);
 		frame.setLayout(null);
 		frame.setBackground(Color.gray);
@@ -162,68 +199,82 @@ public class View extends JPanel {
 		});
 		frame.getContentPane().add(stop_button);
 
-		// Direction-Button
-		direction_button = new JButton("Go Back");
-		direction_button.setBounds(2 * Button_x + 30, Button_y, Button_sizex + 30, Button_sizey);
-		direction_button.setLayout(null);
-		direction_button.addActionListener(actionListener2 = new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				if (actionEvent.getSource() == direction_button) {
-						chang_direct_button();
-				}
+		for (int i = 0; i < picslist_walk.length; i++) {
+			BufferedImage img = createImage(new File("Images/orc/orc_forward_" + Direction.values()[i] + ".png"));
+			BufferedImage[] pics = new BufferedImage[frameCount_walk];
+			for (int j = 0; j < frameCount_walk; j++) {
+				pics[j] = img.getSubimage(ImageWidth * j, 0, ImageWidth, ImageHeight);
 			}
-		});
-		frame.getContentPane().add(direction_button);
-	
-		for (int i = 0; i < picslist.length; i++) {
-			 BufferedImage img=createImage(new File("Images/orc/orc_forward_" +
-			 Direction.values()[i] + ".png"));
-			 BufferedImage[] pics= new BufferedImage[frameCount];
-			 for (int j = 0; j < frameCount; j++) {
-			 pics[j] = img.getSubimage(ImageWidth * j, 0, ImageWidth, ImageHeight);
-			 }
-			 picslist[i]=pics;
+			picslist_walk[i] = pics;
+		}
+
+		for (int i = 0; i < picslist_fire.length; i++) {
+			BufferedImage img = createImage(new File("Images/orc/orc_fire_" + Direction.values()[i] + ".png"));
+			BufferedImage[] pics = new BufferedImage[frameCount_fire];
+			for (int j = 0; j < frameCount_fire; j++) {
+				pics[j] = img.getSubimage(ImageWidth * j, 0, ImageWidth, ImageHeight);
+			}
+			picslist_fire[i] = pics;
+		}
+
+		for (int i = 0; i < picslist_jump.length; i++) {
+			BufferedImage img = createImage(new File("Images/orc/orc_jump_" + Direction.values()[i] + ".png"));
+			BufferedImage[] pics = new BufferedImage[frameCount_jump];
+			for (int j = 0; j < frameCount_jump; j++) {
+				pics[j] = img.getSubimage(ImageWidth * j, 0, ImageWidth, ImageHeight);
+			}
+			picslist_jump[i] = pics;
 		}
 	}
 
-	public void update(int x, int y, String direct) {
+	public void update(int x, int y, Direction direction) {
 		if (stopFlag == false) {
 			setXloc(x);
 			setYloc(y);
-			setDirect(direct);
-			if (direct.equals(Direction.EAST.getName())) {
-				pics = picslist[1];
-			} else if (direct.equals(Direction.WEST.getName())) {
-				pics = picslist[2];
-			} else if (direct.equals(Direction.NORTH.getName())) {
-				pics = picslist[3];
-			} else if (direct.equals(Direction.SOUTH.getName())) {
-				pics = picslist[4];
-			} else if (direct.equals(Direction.SOUTHEAST.getName())) {
-				pics = picslist[0];
-			} else if (direct.equals(Direction.SOUTHWEST.getName())) {
-				pics = picslist[5];
-			} else if (direct.equals(Direction.NORTHEAST.getName())) {
-				pics = picslist[7];
-			} else if (direct.equals(Direction.NORTHWEST.getName())) {
-				pics = picslist[6];
+			setDirect(direction);
+			if (act == (Action_Enum.FORWARD)) {
+				curr_piclist=picslist_walk;
+			}else if(act == (Action_Enum.FIRE)) {
+				curr_piclist=picslist_fire;
+			}else if (act == (Action_Enum.JUMP)) {
+				curr_piclist=picslist_jump;
 			}
+
+			if (direct.equals(Direction.EAST)) {
+				current_pics = curr_piclist[1];
+			} else if (direct.equals(Direction.WEST)) {
+				current_pics = curr_piclist[2];
+			} else if (direct.equals(Direction.NORTH)) {
+				current_pics = curr_piclist[3];
+			} else if (direct.equals(Direction.SOUTH)) {
+				current_pics = curr_piclist[4];
+			} else if (direct.equals(Direction.SOUTHEAST)) {
+				current_pics = curr_piclist[0];
+			} else if (direct.equals(Direction.SOUTHWEST)) {
+				current_pics = curr_piclist[5];
+			} else if (direct.equals(Direction.NORTHEAST)) {
+				current_pics = curr_piclist[7];
+			} else if (direct.equals(Direction.NORTHWEST)) {
+				current_pics = curr_piclist[6];
+			}
+	
 			frame.repaint();
 		}
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(100);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public void paint(Graphics g) {
 		try {
-			setPicNum((picNum + 1) % frameCount);
+			setPicNum((picNum + 1) % current_pics.length);
 
-			g.drawImage(pics[picNum], getXloc(), getYloc(), Color.gray, this);
+			g.drawImage(current_pics[picNum], getXloc(), getYloc(), Color.gray, this);
 		} catch (RuntimeException e) {
 		}
+
 	}
 
 	private BufferedImage createImage(File filename) {
@@ -239,11 +290,15 @@ public class View extends JPanel {
 
 	}
 
+	public void change_key_button() {
+
+	}
+
 	public void change_button_text_stop() {
 		if (stopFlag) {
-			getButton_stop().setText("Stop");
+			stop_button.setText("Stop");
 		} else {
-			getButton_stop().setText("Start");
+			stop_button.setText("Start");
 		}
 
 	}
@@ -251,24 +306,7 @@ public class View extends JPanel {
 	public void chang_direct_button() {
 		if (directFlag) {
 			directFlag = false;
-//			if (getDirect() == Direction.NORTH.getName()) {
-//				setDirect(Direction.SOUTH.getName());
-//			}
-//			if (getDirect() == Direction.SOUTH.getName()) {
-//				setDirect(Direction.NORTH.getName());
-//			}
-//			if (getDirect() == Direction.NORTHEAST.getName()) {
-//				setDirect(Direction.NORTHWEST.getName());
-//			}
-//			if (getDirect() == Direction.NORTHWEST.getName()) {
-//				setDirect(Direction.NORTHEAST.getName());
-//			}
-//			if (getDirect() == Direction.SOUTHWEST.getName()) {
-//				setDirect(Direction.SOUTHEAST.getName());
-//			}
-//			if (getDirect() == Direction.SOUTHEAST.getName()) {
-//				setDirect(Direction.SOUTHWEST.getName());
-//			}
+
 		} else {
 			directFlag = true;
 		}
@@ -278,6 +316,5 @@ public class View extends JPanel {
 		this.xloc2 = x;
 		this.yloc2 = y;
 	}
-	
 
 }
