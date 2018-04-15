@@ -24,7 +24,7 @@ public class Controller {
 	Action drawAction;
 
 	// Set of currently pressed keys
-	private final Set<Integer> pressed = new HashSet<Integer>();
+//	private final Set<Integer> pressed = new HashSet<Integer>();
 
 	public Controller() {
 		view = new View();
@@ -54,7 +54,7 @@ public class Controller {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			pressed.add(e.getKeyCode());
+//			pressed.add(e.getKeyCode());
 			if (e.getKeyCode() == 70) {
 				// Fire
 				view.setAct(Action_Enum.FIRE);
@@ -64,45 +64,45 @@ public class Controller {
 				view.setAct(Action_Enum.JUMP);
 			}
 
-			if (pressed.size() > 1) {
-			       if (pressed.contains(KeyEvent.VK_LEFT) && pressed.contains(KeyEvent.VK_UP)&&pressed.contains(KeyEvent.VK_Z)){
-			    	   		// UP-LEFT
-						model.setyIncr((-1) * Math.abs(model.getyIncr2()));
-						model.setxIncr((-1) * Math.abs(model.getxIncr2()));
-						model.setFlag_north(true);
-						model.setFlag_south(false);
-						model.setFlag_west(true);
-						model.setFlag_east(false);
-			    	   
-			        } else if (pressed.contains(KeyEvent.VK_UP) && pressed.contains(KeyEvent.VK_RIGHT)&&pressed.contains(KeyEvent.VK_Z)) {
-			        		// UP-RIGHT
-						model.setyIncr((-1) * Math.abs(model.getyIncr2()));
-						model.setxIncr(Math.abs(model.getxIncr2()));
-						model.setFlag_north(true);
-						model.setFlag_south(false);
-						model.setFlag_west(false);
-						model.setFlag_east(true);
-			        	
-			        } else if (pressed.contains(KeyEvent.VK_RIGHT) && pressed.contains(KeyEvent.VK_DOWN)&&pressed.contains(KeyEvent.VK_Z)) {
-		        		// DOWN-RIGHT
-					model.setyIncr(Math.abs(model.getyIncr2()));
-					model.setxIncr(Math.abs(model.getxIncr2()));
-					model.setFlag_north(false);
-					model.setFlag_south(true);
-					model.setFlag_west(false);
-					model.setFlag_east(true);
-			        	
-			        } else if (pressed.contains(KeyEvent.VK_LEFT) && pressed.contains(KeyEvent.VK_DOWN)&&pressed.contains(KeyEvent.VK_Z)) {
-		        		// DOWN-LEFT
-					model.setyIncr(Math.abs(model.getyIncr2()));
-					model.setxIncr((-1) *Math.abs(model.getxIncr2()));
-					model.setFlag_north(false);
-					model.setFlag_south(true);
-					model.setFlag_west(true);
-					model.setFlag_east(false);
-			
-			        }
-			} else {
+//			if (pressed.size() > 1) {
+//			       if (pressed.contains(KeyEvent.VK_LEFT) && pressed.contains(KeyEvent.VK_UP)&&pressed.contains(KeyEvent.VK_Z)){
+//			    	   		// UP-LEFT
+//						model.setyIncr((-1) * Math.abs(model.getyIncr2()));
+//						model.setxIncr((-1) * Math.abs(model.getxIncr2()));
+//						model.setFlag_north(true);
+//						model.setFlag_south(false);
+//						model.setFlag_west(true);
+//						model.setFlag_east(false);
+//			    	   
+//			        } else if (pressed.contains(KeyEvent.VK_UP) && pressed.contains(KeyEvent.VK_RIGHT)&&pressed.contains(KeyEvent.VK_Z)) {
+//			        		// UP-RIGHT
+//						model.setyIncr((-1) * Math.abs(model.getyIncr2()));
+//						model.setxIncr(Math.abs(model.getxIncr2()));
+//						model.setFlag_north(true);
+//						model.setFlag_south(false);
+//						model.setFlag_west(false);
+//						model.setFlag_east(true);
+//			        	
+//			        } else if (pressed.contains(KeyEvent.VK_RIGHT) && pressed.contains(KeyEvent.VK_DOWN)&&pressed.contains(KeyEvent.VK_Z)) {
+//		        		// DOWN-RIGHT
+//					model.setyIncr(Math.abs(model.getyIncr2()));
+//					model.setxIncr(Math.abs(model.getxIncr2()));
+//					model.setFlag_north(false);
+//					model.setFlag_south(true);
+//					model.setFlag_west(false);
+//					model.setFlag_east(true);
+//			        	
+//			        } else if (pressed.contains(KeyEvent.VK_LEFT) && pressed.contains(KeyEvent.VK_DOWN)&&pressed.contains(KeyEvent.VK_Z)) {
+//		        		// DOWN-LEFT
+//					model.setyIncr(Math.abs(model.getyIncr2()));
+//					model.setxIncr((-1) *Math.abs(model.getxIncr2()));
+//					model.setFlag_north(false);
+//					model.setFlag_south(true);
+//					model.setFlag_west(true);
+//					model.setFlag_east(false);
+//			
+//			        }
+//			} else {
 				if (e.getKeyCode() == KeyEvent.VK_UP) {
 					// UP
 					view.setAct(Action_Enum.FORWARD);
@@ -149,14 +149,14 @@ public class Controller {
 					model.setFlag_west(false);
 					model.setFlag_east(true);
 				}
-			}
+//			}
 			//	To test input value 
 //			System.out.print(pressed);
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			 pressed.remove(e.getKeyCode());
+//			 pressed.remove(e.getKeyCode());
 
 		}
 	}
